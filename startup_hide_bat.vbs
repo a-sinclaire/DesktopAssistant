@@ -1,0 +1,1 @@
+CreateObject("Wscript.Shell").Run "D:\_Files\Programming\Python\DesktopAssistant\startup.bat", 0, True
