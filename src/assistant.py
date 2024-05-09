@@ -1,3 +1,4 @@
+from os import path
 import random
 import sys
 
@@ -5,11 +6,16 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtCore import Qt
 
 
+def assetFile(file=None):
+    directory = path.dirname(__file__)
+    return path.join(directory, '../assets', file)
+
+
 class Application(QtWidgets.QApplication):
     def __init__(self):
         super().__init__([])
 
-        self.icon = QtGui.QIcon('res/bnuuy.png')
+        self.icon = QtGui.QIcon(assetFile('bnuuy.png'))
         self.tray = QtWidgets.QSystemTrayIcon()
         self.tray.setIcon(self.icon)
         self.tray.setVisible(True)
@@ -18,7 +24,7 @@ class Application(QtWidgets.QApplication):
         self.quitAction = QtGui.QAction('Quit')
         self.quitAction.triggered.connect(self.quit)
         self.hideAction = QtGui.QAction('Hide')
-        self.hideAction.triggered.connect(self.toggle_visibility)
+        self.hideAction.triggered.connect(self.toggleVisibility)
         self.actions = [self.hideAction, self.quitAction]
         for action in self.actions:
             self.menu.addAction(action)
@@ -28,7 +34,7 @@ class Application(QtWidgets.QApplication):
         self.widget.show()
 
     @QtCore.Slot()
-    def toggle_visibility(self):
+    def toggleVisibility(self):
         if self.widget.isVisible():
             self.widget.setVisible(False)
             self.hideAction.setText('Show')
@@ -53,7 +59,7 @@ class Widget(QtWidgets.QWidget):
             self.setWindowFlag(flag)
 
         self.avatar = QtWidgets.QLabel(alignment=Qt.AlignCenter)
-        self.movie = QtGui.QMovie('res/sleepy_claire_smaller.gif')
+        self.movie = QtGui.QMovie(assetFile('sleepy_claire_smaller.gif'))
         self.avatar.setMovie(self.movie)
         self.movie.start()
 
