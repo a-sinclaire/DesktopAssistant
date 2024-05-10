@@ -20,7 +20,7 @@ class SleepApplication(assistant.Application):
         self.nightStart = nightStart
         self.nightLengthMins = nightLengthMins
 
-        self.lock = True
+        self.lock = self.isNight()
 
         if not self.isNight():
             self.hide()
