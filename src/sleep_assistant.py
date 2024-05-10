@@ -1,17 +1,21 @@
-#! /bin/env python3
-import assistant
-import sys
-from PySide6 import QtCore
-from datetime import datetime, timedelta
+#!/bin/env python3
 import argparse
+from datetime import datetime, timedelta
+import sys
+
+from PySide6 import QtCore
+
+import assistant
+
 
 class SleepApplication(assistant.Application):
     '''
-    night_start:  'HH:MM'
-    night_length: int (minutes)
+    nightStart:  'HH:MM'
+    nightLength: int (minutes)
     '''
     def __init__(self, nightStart, nightLengthMins):
-        super().__init__()
+        super().__init__(iconFile='bnuuy.png',
+                         spriteFile='sleepy_claire_smaller.gif')
 
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update)
@@ -34,7 +38,8 @@ class SleepApplication(assistant.Application):
         fullDay = timedelta(hours=24)
         yesterdayStart = tonightStart - fullDay
         yesterdayEnd = yesterdayStart + delta
-        return (now >= tonightStart and now < tonightEnd) or (now >= yesterdayStart and now < yesterdayEnd)
+        return ((now >= tonightStart and now < tonightEnd) or
+                (now >= yesterdayStart and now < yesterdayEnd))
 
     def hide(self):
         if self.widget.isVisible():
@@ -57,8 +62,20 @@ class SleepApplication(assistant.Application):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--nightStart', help='Time sleep assistant will appear in format "HH:MM".', type=str, default='22:00')
-    parser.add_argument('-t', '--nightLength', help='How long the sleep assistant will stay on screen in minutes.', type=int, default=8*60)
+    parser_args = {
+        ('-s', '--nightStart'): {
+            'help': 'Time sleep assistant will appear in format "HH:MM"',
+            'type': str,
+            'default': '22:00'
+        },
+        ('-t', '--nightLength'): {
+            'help': 'Duration sleep assistant will stay on screen in minutes',
+            'type': int,
+            'default': 8 * 60
+        }
+    }
+    for args, kwargs in parser_args.items():
+        parser.add_argument(*args, **kwargs)
     args = parser.parse_args()
 
     app = SleepApplication(args.nightStart, args.nightLength)
