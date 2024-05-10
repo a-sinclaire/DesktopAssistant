@@ -31,7 +31,10 @@ class SleepApplication(assistant.Application):
         tonightStart = now.replace(hour=t.hour, minute=t.minute)
         delta = timedelta(minutes=self.nightLengthMins)
         tonightEnd = tonightStart + delta
-        return now >= tonightStart and now < tonightEnd
+        fullDay = timedelta(hours=24)
+        yesterdayStart = tonightStart - fullDay
+        yesterdayEnd = yesterdayStart + delta
+        return (now >= tonightStart and now < tonightEnd) or (now >= yesterdayStart and now < yesterdayEnd)
 
     def hide(self):
         if self.widget.isVisible():
