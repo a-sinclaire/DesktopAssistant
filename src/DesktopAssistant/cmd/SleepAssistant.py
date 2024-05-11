@@ -5,17 +5,19 @@ import sys
 
 from PySide6 import QtCore
 
-import assistant
+from DesktopAssistant import assistant
 
 
 class SleepApplication(assistant.Application):
-    '''
-    nightStart:  'HH:MM'
-    nightLength: int (minutes)
-    '''
-    def __init__(self, nightStart, nightLengthMins):
-        super().__init__(iconName='bnuuy.png',
-                         spriteName='sleepy_claire_smaller.gif')
+    def __init__(self, nightStart: str, nightLengthMins: int):
+        '''
+        :param nightStart:  when night is assumed to start
+        :param nightLength: how long the night is assumed to be
+        '''
+        super().__init__(
+            iconPath=':/icons/bnuuy.png',
+            spritePath=':/sprites/sleepy_claire_smaller.gif'
+        )
 
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update)
@@ -60,7 +62,7 @@ class SleepApplication(assistant.Application):
                 self.hide()
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser_args = {
         ('-s', '--nightStart'): {
@@ -79,4 +81,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     app = SleepApplication(args.nightStart, args.nightLength)
-    sys.exit(app.exec())
+    return app.exec()
+
+
+if __name__ == '__main__':
+    sys.exit(main())
+
