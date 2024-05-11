@@ -5,7 +5,8 @@ import assistant
 
 
 def main():
-    app = assistant.Application()
+    app = assistant.Application(spriteName='sleepy_claire_smaller.gif',
+                                iconName='bnuuy.png')
     return app.exec()
 
 
