@@ -14,8 +14,8 @@ class SleepApplication(assistant.Application):
     nightLength: int (minutes)
     '''
     def __init__(self, nightStart, nightLengthMins):
-        super().__init__(iconFile='bnuuy.png',
-                         spriteFile='sleepy_claire_smaller.gif')
+        super().__init__(iconName='bnuuy.png',
+                         spriteName='sleepy_claire_smaller.gif')
 
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update)

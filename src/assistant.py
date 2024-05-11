@@ -5,17 +5,19 @@ import sys
 from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtCore import Qt
 
+import utils.filetype
 
-def assetFile(file=None):
+
+def assetPath(filename=None):
     directory = path.dirname(__file__)
-    return path.join(directory, '../assets', file)
+    return path.join(directory, '../assets', filename)
 
 
 class Application(QtWidgets.QApplication):
-    def __init__(self):
+    def __init__(self, spriteName, iconName):
         super().__init__([])
 
-        self.icon = QtGui.QIcon(assetFile('bnuuy.png'))
+        self.icon = QtGui.QIcon(assetPath(iconName))
         self.tray = QtWidgets.QSystemTrayIcon()
         self.tray.setIcon(self.icon)
         self.tray.setVisible(True)
@@ -30,7 +32,7 @@ class Application(QtWidgets.QApplication):
             self.menu.addAction(action)
         self.tray.setContextMenu(self.menu)
 
-        self.widget = Widget()
+        self.widget = Widget(spriteName)
         self.widget.show()
 
     @QtCore.Slot()
@@ -44,7 +46,7 @@ class Application(QtWidgets.QApplication):
 
 
 class Widget(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, spriteName):
         super().__init__()
 
         attributes = [Qt.WA_TranslucentBackground]
@@ -58,10 +60,16 @@ class Widget(QtWidgets.QWidget):
         for flag in windowFlags:
             self.setWindowFlag(flag)
 
+        spritePath = assetPath(spriteName)
+        spriteIsAnimated = utils.filetype.isAnimated(spritePath)
         self.avatar = QtWidgets.QLabel(alignment=Qt.AlignCenter)
-        self.movie = QtGui.QMovie(assetFile('sleepy_claire_smaller.gif'))
-        self.avatar.setMovie(self.movie)
-        self.movie.start()
+        if spriteIsAnimated:
+            self.sprite = QtGui.QMovie(spritePath)
+            self.avatar.setMovie(self.sprite)
+            self.sprite.start()
+        else:
+            self.sprite = QtGui.QPixmap(spritePath)
+            self.avatar.setPixmap(self.sprite)
 
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.setSpacing(0)
