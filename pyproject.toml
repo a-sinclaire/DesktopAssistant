@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "DesktopAssistant"
+version = "0.0.1"
+description = "a little friend for your desktop :3"
+authors = ["Amelia Sinclaire <asinclaire.HRI@gmail.com>",
+           "bumbledbees <sam@bombus.cloud>"]
+readme = "README.md"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/a-sinclaire/DesktopAssistant"
+keywords = ["qt", "qt6", "gui", "desktop", "assistant"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Environment :: X11 Applications :: Qt",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Games/Entertainment",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Other/Nonlisted Topic"
+]
+packages = [
+    { include = "DesktopAssistant", from = "src" }
+]
+include = ["assets/*", "misc/*"]
+
+[tool.poetry.dependencies]
+python = "^3.9, <3.13"
+pyside6 = "~6.7"
+
+[tool.poetry.scripts]
+DesktopAssistant = "DesktopAssistant.cmd.DesktopAssistant:main"
+SleepAssistant = "DesktopAssistant.cmd.SleepAssistant:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

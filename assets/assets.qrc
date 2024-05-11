@@ -1,0 +1,10 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="icons">
+        <file alias="bnuuy.png">bnuuy.png</file>
+    </qresource>
+    <qresource prefix="sprites">
+        <file alias="sleepy_claire_small.gif">sleepy_claire_small.gif</file>
+        <file alias="sleepy_claire_smaller.gif">sleepy_claire_smaller.gif</file>
+    </qresource>
+</RCC>

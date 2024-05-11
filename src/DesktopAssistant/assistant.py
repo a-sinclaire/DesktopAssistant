@@ -1,23 +1,26 @@
+from importlib import resources
+import io
 from os import path
 import random
 import sys
+from typing import BinaryIO
 
 from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtCore import Qt
 
-import utils.filetype
-
-
-def assetPath(filename=None):
-    directory = path.dirname(__file__)
-    return path.join(directory, '../assets', filename)
+import DesktopAssistant.assets
+from DesktopAssistant.utils import filetype
 
 
 class Application(QtWidgets.QApplication):
-    def __init__(self, spriteName, iconName):
+    def __init__(self, spritePath: str, iconPath: str):
+        """
+        :param spritePath: QResource path of the desktop assistant sprite
+        :param spritePath: QResource path of the system tray icon
+        """
         super().__init__([])
 
-        self.icon = QtGui.QIcon(assetPath(iconName))
+        self.icon = QtGui.QIcon(iconPath)
         self.tray = QtWidgets.QSystemTrayIcon()
         self.tray.setIcon(self.icon)
         self.tray.setVisible(True)
@@ -31,11 +34,9 @@ class Application(QtWidgets.QApplication):
         for action in self.actions:
             self.menu.addAction(action)
         self.tray.setContextMenu(self.menu)
-
-        self.widget = Widget(spriteName)
+        self.widget = Widget(spritePath)
         self.widget.show()
 
-    @QtCore.Slot()
     def toggleVisibility(self):
         if self.widget.isVisible():
             self.widget.setVisible(False)
@@ -46,7 +47,10 @@ class Application(QtWidgets.QApplication):
 
 
 class Widget(QtWidgets.QWidget):
-    def __init__(self, spriteName):
+    def __init__(self, spritePath: str):
+        """
+        :param spritePath: QResource path of the desktop assistant sprite
+        """
         super().__init__()
 
         attributes = [Qt.WA_TranslucentBackground]
@@ -60,8 +64,9 @@ class Widget(QtWidgets.QWidget):
         for flag in windowFlags:
             self.setWindowFlag(flag)
 
-        spritePath = assetPath(spriteName)
-        spriteIsAnimated = utils.filetype.isAnimated(spritePath)
+        resource = QtCore.QResource(spritePath)
+        fpSprite = io.BytesIO(resource.data())
+        spriteIsAnimated = filetype.isAnimated(fpSprite)
         self.avatar = QtWidgets.QLabel(alignment=Qt.AlignCenter)
         if spriteIsAnimated:
             self.sprite = QtGui.QMovie(spritePath)
@@ -79,19 +84,11 @@ class Widget(QtWidgets.QWidget):
         self.click_x = None
         self.click_y = None
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event: QtGui.QMouseEvent):
         self.click_x = event.x()
         self.click_y = event.y()
 
-    def mouseMoveEvent(self, event):
+    def mouseMoveEvent(self, event: QtGui.QMouseEvent):
         self.move(event.globalX() - self.click_x,
                   event.globalY() - self.click_y)
 
-
-if __name__ == '__main__':
-    app = Application()
-
-    widget = DesktopAssistant()
-    widget.show()
-
-    sys.exit(app.exec())
