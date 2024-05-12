@@ -4,7 +4,10 @@
         <file alias="bnuuy.png">bnuuy.png</file>
     </qresource>
     <qresource prefix="sprites">
-        <file alias="sleepy_claire_small.gif">sleepy_claire_small.gif</file>
-        <file alias="sleepy_claire_smaller.gif">sleepy_claire_smaller.gif</file>
+        <file alias="sleepy_claire.gif">sleepy_claire.gif</file>
+        <file alias="sleepy_claire_drag.gif">sleepy_claire_drag.gif</file>
+
+        <file alias="sleepy_claire_crop.gif">sleepy_claire_crop.gif</file>
+        <file alias="sleepy_claire_drag_crop.gif">sleepy_claire_drag_crop.gif</file>
     </qresource>
 </RCC>
