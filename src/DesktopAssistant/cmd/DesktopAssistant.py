@@ -5,10 +5,13 @@ from DesktopAssistant import assistant
 
 
 def main():
-    app = assistant.Application(
-        spritePath=':/sprites/sleepy_claire_smaller.gif',
-        iconPath=':/icons/bnuuy.png'
-    )
+    sprites = {
+        'sleepy_claire': ':/sprites/sleepy_claire_crop.gif',
+        'sleepy_claire_drag': ':/sprites/sleepy_claire_drag_crop.gif'
+    }
+    sprites = [assistant.Sprite(k, v) for k, v in sprites.items()]
+    app = assistant.Application(iconPath=':/icons/bnuuy.png', sprites=sprites,
+                                initialSprite='sleepy_claire')
     return app.exec()
 
 

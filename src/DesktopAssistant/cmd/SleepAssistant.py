@@ -3,9 +3,33 @@ import argparse
 from datetime import datetime, timedelta
 import sys
 
-from PySide6 import QtCore
+from PySide6 import QtCore, QtGui
 
 from DesktopAssistant import assistant
+
+
+class SleepWidget(assistant.Widget):
+    CLAIRE_DRAG_NECK_X = 32
+    CLAIRE_DRAG_NECK_Y = 45
+
+    def mousePressEvent(self, event: QtGui.QMouseEvent):
+        super().mousePressEvent(event)
+
+        self.setSprite('sleepy_claire_drag')
+        self.mouseMoveEvent(event)
+
+    def mouseMoveEvent(self, event: QtGui.QMouseEvent):
+        super().mouseMoveEvent(event)
+
+        self.move(event.globalX() - self.CLAIRE_DRAG_NECK_X,
+                  event.globalY() - self.CLAIRE_DRAG_NECK_Y)
+
+    def mouseReleaseEvent(self, event: QtGui.QMouseEvent):
+        super().mouseReleaseEvent(event)
+
+        CLAIRE_DROP_DISPLACEMENT = 7
+        self.setSprite('sleepy_claire')
+        self.move(self.x(), self.y() + CLAIRE_DROP_DISPLACEMENT)
 
 
 class SleepApplication(assistant.Application):
@@ -13,11 +37,18 @@ class SleepApplication(assistant.Application):
         '''
         :param nightStart:  when night is assumed to start
         :param nightLength: how long the night is assumed to be
+        :param widgetArgs: other positional args to be passed to the widget
+        :param widgetKwrgs: other keyword args to be passed to the widget
         '''
-        super().__init__(
-            iconPath=':/icons/bnuuy.png',
-            spritePath=':/sprites/sleepy_claire_smaller.gif'
-        )
+        sprites = {
+            'sleepy_claire': ':/sprites/sleepy_claire_crop.gif',
+            'sleepy_claire_drag': ':/sprites/sleepy_claire_drag_crop.gif'
+        }
+        sprites = [assistant.Sprite(k, v) for k, v in sprites.items()]
+        super().__init__(iconPath=':/icons/bnuuy.png',
+                         sprites=sprites,
+                         widgetClass=SleepWidget,
+                         initialSprite='sleepy_claire')
 
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update)
