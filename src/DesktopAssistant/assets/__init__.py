@@ -5,11 +5,10 @@ from PySide6 import QtCore
 from DesktopAssistant.utils.filetype import fileType
 from DesktopAssistant.utils.qt import rcc
 
-
 ASSETS_DIR = Path(__file__).parent
 
 
-def __findFiles(path, files=[]):
+def __findFiles(path: str, files: list[Path]):  # pylint: disable=invalid-name
     for subpath, subdirs, subfiles in path.walk():
         for f in subfiles:
             fPath = subpath / f
@@ -20,14 +19,18 @@ def __findFiles(path, files=[]):
 
         if subdirs and subpath != path:
             for d in subdirs:
-                files += __find_files(path / d, files)
+                files += __findFiles(path / d, files)
 
     return files
 
 
-for file in __findFiles(ASSETS_DIR):
-    resourceData = rcc(str(ASSETS_DIR / file), str(file))
-    rccFilePath = str(ASSETS_DIR / file) + '.rcc'
-    with open(rccFilePath, 'wb') as fp:
-        fp.write(resourceData)
-    QtCore.QResource.registerResource(rccFilePath)
+def __registerResources():  # pylint: disable=invalid-name
+    for file in __findFiles(ASSETS_DIR, []):
+        resourceData = rcc(str(ASSETS_DIR / file), str(file))
+        rccFilePath = str(ASSETS_DIR / file) + '.rcc'
+        with open(rccFilePath, 'wb') as fp:
+            fp.write(resourceData)
+        QtCore.QResource.registerResource(rccFilePath)
+
+
+__registerResources()
