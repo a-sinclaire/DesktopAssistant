@@ -1,0 +1,40 @@
+name: Setup Python environment
+description: Setup working environment with Python & Poetry
+
+inputs:
+  python-version:
+    required: true
+    description: The version of Python to use (from actions/setup-python@v4)
+outputs:
+  short-commit-hash:
+    description: Short commit hash of the current repository head
+    value: ${{ steps.info.outputs.short-commit-hash }}
+  package-version:
+    description: Current version of the Python package
+    value: ${{ steps.info.outputs.package-version }}
+  semantic-version:
+    description: Semantic version string for this release
+    value: ${{ steps.info.outputs.semantic-version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Install dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry
+        poetry install
+    - name: Output package info
+      id: info
+      shell: bash
+      run: |
+        SHORT_HASH=$(git rev-parse --short HEAD)
+        PKG_VERSION=$(poetry run python3 -c "import importlib.metadata;print(importlib.metadata.version('DesktopAssistant'))")
+        echo "short-commit-hash=$SHORT_HASH" >> $GITHUB_OUTPUT
+        echo "package-version=$PKG_VERSION" >> $GITHUB_OUTPUT
+        echo "semantic-version=$PKG_VERSION-$SHORT_HASH" >> $GITHUB_OUTPUT

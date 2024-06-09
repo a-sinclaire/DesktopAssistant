@@ -36,6 +36,8 @@ python = "^3.9, <3.13"
 pyside6 = "~6.7"
 
 [tool.poetry.group.dev.dependencies]
+isort = "~5.13"
+flake8 = "~7.0"
 pylint = "~3.2"
 
 [tool.poetry.scripts]
