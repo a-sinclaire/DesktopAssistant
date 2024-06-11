@@ -1,0 +1,22 @@
+fail_fast: true
+repos:
+  - repo: "https://github.com/pycqa/isort"
+    rev: "5.13.2"
+    hooks:
+      - id: isort
+        name: "Proper import order (isort)"
+        args:
+          - --check
+          - --diff
+  - repo: "https://github.com/pycqa/flake8"
+    rev: "7.0.0"
+    hooks:
+      - id: flake8
+        name: "Code formatting (flake8)"
+  - repo: local
+    hooks:
+      - id: pylint
+        name: "Static analysis (pylint)"
+        entry: poetry run pylint
+        language: system
+        types: [file, python]

@@ -1,0 +1,40 @@
+name: build-release
+run-name: Build packages and upload to releases section
+
+on:
+  workflow_run:
+    workflows: [run-tests]
+    types: [completed]
+    branches:
+      - main
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v4
+      - name: Setup Python environment
+        id: env
+        uses: ./.github/actions/setup-environment/  # the trailing slash is important!
+        with:
+          python-version: 3.11
+      - name: Build package ${{ steps.env.outputs.semantic-version }}
+        run: poetry build
+      - name: Tag commit ${{ steps.env.outputs.short-commit-hash }}
+        uses: negz/create-tag@v1
+        with:
+          version: ${{ steps.env.outputs.semantic-version }}
+          message: Release ${{ steps.env.outputs.semantic-version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload and release
+        uses: softprops/action-gh-release@v2
+        with:
+          make_latest: true
+          fail_on_unmatched_files: true
+          name: Release ${{ steps.env.outputs.semantic-version }}
+          tag_name: ${{ steps.env.outputs.semantic-version }}
+          files: |
+            dist/**.tar.gz
+            dist/**.whl

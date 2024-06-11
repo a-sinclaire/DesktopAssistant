@@ -9,7 +9,6 @@ def main():
         'sleepy_claire': ':/sprites/sleepy_claire_crop.gif',
         'sleepy_claire_drag': ':/sprites/sleepy_claire_drag_crop.gif'
     }
-    sprites = [assistant.Sprite(k, v) for k, v in sprites.items()]
     app = assistant.Application(iconPath=':/icons/bnuuy.png', sprites=sprites,
                                 initialSprite='sleepy_claire')
     return app.exec()
@@ -17,4 +16,3 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
-

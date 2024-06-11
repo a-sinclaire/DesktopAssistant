@@ -28,17 +28,16 @@ def gifIsAnimated(fpGif: BinaryIO) -> bool:
         gctSize = packedByte & 0b00000111
 
         if hasGct:
-            globalColorTable = fp.read(3 * pow(2, gctSize + 1))
+            fp.read(3 * pow(2, gctSize + 1))  # global color table
 
     def skipImageData(fp: BinaryIO):
         """skips the image data, which is basically just a series of sub blocks
         plus the lzw minimum code to decompress the file data"""
-        lzwMinimumCodeSize = fp.read(1)
+        fp.read(1)  # lzw minimum code size
         skipSubBlocks(fp)
 
     def skipSubBlocks(fp: BinaryIO):
         """skips over the sub blocks
-
         the first byte of the sub block tells you how big that block is, then
         you read those, then read the next byte, which will tell you how big
         the next sub block is, you keep doing this until you get a sub block
@@ -107,7 +106,4 @@ def isAnimated(fp: BinaryIO) -> bool:
             fp.seek(0)
             return gifIsAnimated(fp)
         return False
-    elif mimeType.startswith('video/'):
-        return True
-    return False
-
+    return mimeType.startswith('video/')
