@@ -31,17 +31,13 @@ $ poetry run DesktopAssistant
 $ poetry run SleepAssistant
 ```
 
-Otherwise:
+The Python package containing the program can also be downloaded and installed from the DesktopAssistant GitHub release page:
 ```
-$ pip install desktopassistant-0.0.1-py3-none-any.whl [--user]
+$ pip install https://github.com/a-sinclaire/DesktopAssistant/releases/latest/download/desktopassistant-0.0.1-py3-none-any.whl [--user]
 $ DesktopAssistant
 $ SleepAssistant
 ```
-<sub>
-(this is a janky temporary solution that will be fixed once this is on PyPi)
-</sub>
 
 ## Development notes
 
-If you'd like to add/remove/rename assets when tinkering with this project, you should edit the `assets/assets.qrc` file and recompile assets.py. A little utility script to do this is located in `misc/generate_assets.sh`, which will do this for you. More info can be found in [this tutorial](https://www.pythonguis.com/tutorials/packaging-data-files-pyside6-with-qresource-system/).
-
+<sub>More to come...</sub>
